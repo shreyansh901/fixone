@@ -1,7 +1,7 @@
 const nameInput = document.querySelector(".name-input");
 const numberInput = document.querySelector(".number-input");
-const monthInput = document.getElementById("month-input");
-const yearInput = document.getElementById("year-input");
+const monthInput = document.querySelector(".date-input .month-input");
+const yearInput = document.querySelector(".date-input .year-input");
 const cvcInput = document.querySelector(".cvc-input");
 
 const nameOutput = document.querySelector(".name-output");
@@ -10,6 +10,7 @@ const monthOutput = document.querySelector(".month-output");
 const yearOutput = document.querySelector(".year-output");
 const cvcOutput = document.querySelector(".cvc-output");
 
+const submitButtons = document.querySelectorAll('button[type="submit"]');
 const form = document.getElementById("card-form");
 const thankYouScreen = document.querySelector(".thank-you");
 
@@ -56,75 +57,79 @@ cvcInput.addEventListener("input", () => {
   cvcOutput.textContent = cvc || "000";
 });
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+submitButtons.forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault(); // prevent the form from submitting
+    let valid = true;
 
-  let valid = true;
+    // Clear all previous errors
+    form.querySelectorAll(".error").forEach(el => {
+      el.textContent = "";
+      el.style.display = "none";
+    });
 
-  // Clear all error messages first before validation
-  form.querySelectorAll(".error").forEach((el) => {
-    el.textContent = "";
-    el.style.display = "none";
-  });
-
-  // 3) ✓ Issue: should display error messages when submitting empty form
-  if (!nameInput.value.trim()) {
-    showError(nameInput, "Can't be blank", "empty");
-    valid = false;
-  } else if (!/^[A-Za-z\s]+$/.test(nameInput.value)) {
-    showError(nameInput, "Wrong format, letters only", "invalid");
-    valid = false;
-  }
-
-  if (!numberInput.value.trim()) {
-    console.log(numberInput.value);
-    showError(numberInput, "Can't be blank", "empty");
-    valid = false;
-  } else {
-    const numClean = numberInput.value.replace(/\s/g, "");
-    if (!/^\d{16}$/.test(numClean)) {
-      console.log(numClean);
-      showError(numberInput, "Wrong format, numbers only", "invalid");
+    // Validation logic (same as current form submit)
+    if (!nameInput.value.trim()) {
+      showError(nameInput, "Can't be blank");
+      valid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(nameInput.value)) {
+      showError(nameInput, "Wrong format, letters only");
       valid = false;
     }
-  }
 
-  if (!monthInput.value.trim()) {
-    showError(monthInput, "Can't be blank", "empty");
-    valid = false;
-  } else if (
-    !/^\d{2}$/.test(monthInput.value) ||
-    +monthInput.value < 1 ||
-    +monthInput.value > 12
-  ) {
-    showError(monthInput, "Wrong format, numbers only", "invalid");
-    valid = false;
-  }
+    if (!numberInput.value.trim()) {
+      showError(numberInput, "Can't be blank");
+      valid = false;
+    } else {
+      const numClean = numberInput.value.replace(/\s/g, "");
+      if (!/^\d{16}$/.test(numClean)) {
+        showError(numberInput, "Wrong format, numbers only");
+        valid = false;
+      }
+    }
 
-  if (!yearInput.value.trim()) {
-    showError(yearInput, "Can't be blank", "empty");
-    valid = false;
-  } else if (!/^\d{2}$/.test(yearInput.value)) {
-    showError(yearInput, "Wrong format, numbers only", "invalid");
-    valid = false;
-  }
-  if (!cvcInput.value.trim()) {
-    showError(cvcInput, "Can't be blank", "empty");
-    valid = false;
-  } else if (!/^\d{3}$/.test(cvcInput.value)) {
-    showError(cvcInput, "Wrong format, numbers only", "invalid");
-    valid = false;
-  }
+    if (!monthInput.value.trim()) {
+      showError(monthInput, "Can't be blank");
+      valid = false;
+    } else if (!/^\d{2}$/.test(monthInput.value) || +monthInput.value < 1 || +monthInput.value > 12) {
+      showError(monthInput, "Wrong format, numbers only");
+      valid = false;
+    }
 
-  if (valid) {
-    form.style.display = "none";
-    thankYouScreen.classList.remove("hidden");
-  }
+    if (!yearInput.value.trim()) {
+      showError(yearInput, "Can't be blank");
+      valid = false;
+    } else if (!/^\d{2}$/.test(yearInput.value)) {
+      showError(yearInput, "Wrong format, numbers only");
+      valid = false;
+    }
+
+    if (!cvcInput.value.trim()) {
+      showError(cvcInput, "Can't be blank");
+      valid = false;
+    } else if (!/^\d{3}$/.test(cvcInput.value)) {
+      showError(cvcInput, "Wrong format, numbers only");
+      valid = false;
+    }
+
+    // Show thank-you screen if valid
+    if (valid) {
+      form.style.display = "none";
+      thankYouScreen.classList.remove("hidden");
+    }
+  });
 });
 
 // Helper to display error messages near the inputs
 function showError(inputEl, message) {
-  const errorSpan = inputEl.nextElementSibling; // Always selects the next span
+  let errorSpan;
+  if (inputEl.closest('.date-input')) {
+    // use the error span that comes *after* .date-input
+    const dateContainer = inputEl.closest('.date-input');
+    errorSpan = dateContainer.nextElementSibling;
+  } else {
+    errorSpan = inputEl.nextElementSibling;
+  } // Always selects the next span
   if (errorSpan) {
     errorSpan.textContent = message;
     errorSpan.style.display = "block";
