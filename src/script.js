@@ -11,64 +11,58 @@ const yearOutput = document.querySelector(".year-output");
 const cvcOutput = document.querySelector(".cvc-output");
 
 const submitButtons = document.querySelectorAll('button[type="submit"]');
-const form = document.getElementById("card-form");
 const thankYouScreen = document.querySelector(".thank-you");
 
 // Helper to format card number with spaces after every 4 digits
 function formatNumber(value) {
   return value
-    .replace(/\s/g, "") // Only digits
-    .replace(/(.{4})(?=.)/g, "$1 ") // Space every 4 digits
+    .replace(/\s/g, "")
+    .replace(/(.{4})(?=.)/g, "$1 ")
     .trim();
 }
 
-// ✓ Issue: should update the cardholder name in real-time
+// Real-time updates
 nameInput.addEventListener("input", () => {
   nameOutput.textContent = nameInput.value || "JANE APPLESEED";
 });
 
-// ✓ Issue: should update the card number with formatted spacing in real-time
 numberInput.addEventListener("input", () => {
   const formatted = formatNumber(numberInput.value);
   numberOutput.textContent = formatted || "0000 0000 0000 0000";
-  console.log(numberOutput.textContent);
   numberInput.value = formatted;
-  console.log(numberInput.value);
 });
 
-// 1) ✓ Issue: should update the expiry month in real-time
 monthInput.addEventListener("input", () => {
-  let month = monthInput.value.replace(/\s/g, "").slice(0, 2); // allow digits only, max 2 chars
+  let month = monthInput.value.replace(/\s/g, "").slice(0, 2);
   monthInput.value = month;
   monthOutput.textContent = month ? month.padStart(2, "0") : "00";
 });
 
-// 2) ✓ Issue: should update the expiry year in real-time
 yearInput.addEventListener("input", () => {
-  let year = yearInput.value.replace(/\s/g, "").slice(0, 2); // allow digits only, max 2 chars
+  let year = yearInput.value.replace(/\s/g, "").slice(0, 2);
   yearInput.value = year;
   yearOutput.textContent = year ? year.padStart(2, "0") : "00";
 });
 
-// ✓ Issue: should update the CVC in real-time
 cvcInput.addEventListener("input", () => {
   let cvc = cvcInput.value.replace(/\s/g, "").slice(0, 3);
   cvcInput.value = cvc;
   cvcOutput.textContent = cvc || "000";
 });
 
-submitButtons.forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault(); // prevent the form from submitting
+// Submit button logic (no form used)
+submitButtons.forEach((btn) => {
+  btn.addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default behavior
     let valid = true;
 
-    // Clear all previous errors
-    form.querySelectorAll(".error").forEach(el => {
+    // Clear previous errors
+    document.querySelectorAll(".error").forEach((el) => {
       el.textContent = "";
       el.style.display = "none";
     });
 
-    // Validation logic (same as current form submit)
+    // Validation logic
     if (!nameInput.value.trim()) {
       showError(nameInput, "Can't be blank");
       valid = false;
@@ -91,7 +85,11 @@ submitButtons.forEach(btn => {
     if (!monthInput.value.trim()) {
       showError(monthInput, "Can't be blank");
       valid = false;
-    } else if (!/^\d{2}$/.test(monthInput.value) || +monthInput.value < 1 || +monthInput.value > 12) {
+    } else if (
+      !/^\d{2}$/.test(monthInput.value) ||
+      +monthInput.value < 1 ||
+      +monthInput.value > 12
+    ) {
       showError(monthInput, "Wrong format, numbers only");
       valid = false;
     }
@@ -114,40 +112,45 @@ submitButtons.forEach(btn => {
 
     // Show thank-you screen if valid
     if (valid) {
-      form.style.display = "none";
+      document.querySelector(".card-form-wrapper").style.display = "none"; // hide the form container
       thankYouScreen.classList.remove("hidden");
     }
   });
 });
 
-// Helper to display error messages near the inputs
+// Helper to display error messages
 function showError(inputEl, message) {
   let errorSpan;
-  if (inputEl.closest('.date-input')) {
-    // use the error span that comes *after* .date-input
-    const dateContainer = inputEl.closest('.date-input');
-    errorSpan = dateContainer.nextElementSibling;
+  if (inputEl.closest(".date-input")) {
+    errorSpan = inputEl.closest(".date-input").nextElementSibling;
   } else {
     errorSpan = inputEl.nextElementSibling;
-  } // Always selects the next span
+  }
   if (errorSpan) {
     errorSpan.textContent = message;
     errorSpan.style.display = "block";
   }
 }
 
+// Reset function (no form element reference)
 window.resetForm = function () {
-  form.style.display = "flex";
+  document.querySelector(".card-form-wrapper").style.display = "flex";
   thankYouScreen.classList.add("hidden");
-  form.reset();
 
+  // Reset all inputs
+  [nameInput, numberInput, monthInput, yearInput, cvcInput].forEach(
+    (input) => (input.value = "")
+  );
+
+  // Reset outputs
   nameOutput.textContent = "JANE APPLESEED";
   numberOutput.textContent = "0000 0000 0000 0000";
   monthOutput.textContent = "00";
   yearOutput.textContent = "00";
   cvcOutput.textContent = "000";
 
-  form.querySelectorAll(".error").forEach((el) => {
+  // Clear all errors
+  document.querySelectorAll(".error").forEach((el) => {
     el.textContent = "";
     el.style.display = "none";
   });
