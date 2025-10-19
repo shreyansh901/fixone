@@ -84,7 +84,7 @@ form.addEventListener("submit", function (e) {
     const numClean = numberInput.value.replace(/\s/g, "");
     if (!/^\d{16}$/.test(numClean)) {
       console.log(numClean);
-      showError(numberInput, "Wrong format,four numbers only", "invalid");
+      showError(numberInput, "Wrong format, numbers only", "invalid");
       valid = false;
     }
   }
@@ -97,7 +97,7 @@ form.addEventListener("submit", function (e) {
     +monthInput.value < 1 ||
     +monthInput.value > 12
   ) {
-    showError(monthInput, "Wrong format,month numbers only", "invalid");
+    showError(monthInput, "Wrong format, numbers only", "invalid");
     valid = false;
   }
 
@@ -105,14 +105,14 @@ form.addEventListener("submit", function (e) {
     showError(yearInput, "Can't be blank", "empty");
     valid = false;
   } else if (!/^\d{2}$/.test(yearInput.value)) {
-    showError(yearInput, "Wrong format, year numbers only", "invalid");
+    showError(yearInput, "Wrong format, numbers only", "invalid");
     valid = false;
   }
   if (!cvcInput.value.trim()) {
     showError(cvcInput, "Can't be blank", "empty");
     valid = false;
   } else if (!/^\d{3}$/.test(cvcInput.value)) {
-    showError(cvcInput, "Wrong format, CVC numbers only", "invalid");
+    showError(cvcInput, "Wrong format, numbers only", "invalid");
     valid = false;
   }
 
