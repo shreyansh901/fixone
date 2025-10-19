@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interactive Credit Card Form</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="card-preview">
+        <div class="card-front">
+          <span class="name-output">JANE APPLESEED</span>
+          <span class="number-output">0000 0000 0000 0000</span>
+          <span class="month-output">00</span>/<span class="year-output"
+            >00</span
+          >
+        </div>
+        <div class="card-back">
+          <span class="cvc-output">000</span>
+        </div>
+      </div>
+      <form id="card-form">
+        <input
+          type="text"
+          class="name-input"
+          placeholder="e.g. Jane Appleseed"
+        />
+        <span class="error empty"></span>
+        <span class="error invalid"></span>
+
+        <input
+          type="text"
+          class="number-input"
+          placeholder="e.g. 1234 5678 9123 0000"
+          maxlength="19"
+        />
+        <span class="error empty"></span>
+        <span class="error invalid"></span>
+
+        <div class="date-container">
+          <input
+            type="text"
+            class="date-input month-input"
+            id="month-input"
+            placeholder="MM"
+          />
+          <span class="error empty"></span>
+          <span class="error invalid"></span>
+
+          <input
+            type="text"
+            class="date-input year-input"
+            id="year-input"
+            placeholder="YY"
+            maxlength="2"
+          />
+          <span class="error empty"></span>
+          <span class="error invalid"></span>
+        </div>
+
+        <input
+          type="text"
+          class="cvc-input"
+          placeholder="e.g. 123"
+          maxlength="3"
+        />
+        <span class="error empty"></span>
+        <span class="error invalid"></span>
+
+        <button type="submit" class="btn">Confirm</button>
+      </form>
+
+      <div class="thank-you hidden">
+        <p>THANK YOU!</p>
+        <p>We've added your card details</p>
+        <button onclick="resetForm()">Continue</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
